@@ -79395,14 +79395,6 @@ const utils = __nccwpck_require__(1608)
 const which = __nccwpck_require__(6143)
 
 async function run() {
-  const nix = await which('nix', { nothrow: true })
-  if (nix === null) {
-    core.startGroup('Download & Install flox')
-    await utils.getDownloadUrl()
-    await exec.exec('bash', ['-c', utils.SCRIPTS.installFlox])
-    core.endGroup()
-  }
-
   core.startGroup('Configure Git')
   utils.exportVariableFromInput('git-user')
   utils.exportVariableFromInput('git-email')
@@ -79460,13 +79452,6 @@ async function run() {
   await exec.exec('bash', ['-c', utils.SCRIPTS.restartNixDaemon])
   core.endGroup()
 
-  const flox = await which('flox', { nothrow: true })
-  if (flox !== null) {
-    core.startGroup('Checking Flox Version')
-    await exec.exec('flox', ['--version'])
-    core.endGroup()
-  }
-
   core.startGroup('Checking Nix Version')
   await exec.exec('nix', ['--version'])
   await exec.exec('nix', [
@@ -79508,8 +79493,8 @@ const utils = __nccwpck_require__(1608)
 
 async function run() {
   const storePathsFile = process.env['STORE_PATHS_FILE']
-  const floxSubstituter = process.env['FLOX_SUBSTITUTER']
-  if (storePathsFile && floxSubstituter) {
+  const configureNixSubstituter = process.env['CONFIGURE_NIX_SUBSTITUTER']
+  if (storePathsFile && configureNixSubstituter) {
     core.startGroup('Push Nix Store Paths')
     await exec.exec('bash', ['-c', utils.SCRIPTS.pushNewNixStorePaths])
     core.endGroup()
@@ -79539,7 +79524,6 @@ __nccwpck_require__.r(__webpack_exports__);
 /* harmony export */   "GH_CACHE_RESTORE_KEYS": () => (/* binding */ GH_CACHE_RESTORE_KEYS),
 /* harmony export */   "SCRIPTS": () => (/* binding */ SCRIPTS),
 /* harmony export */   "exportVariableFromInput": () => (/* binding */ exportVariableFromInput),
-/* harmony export */   "getDownloadUrl": () => (/* binding */ getDownloadUrl),
 /* harmony export */   "scriptPath": () => (/* binding */ scriptPath)
 /* harmony export */ });
 const core = __nccwpck_require__(2186)
@@ -79567,7 +79551,6 @@ function scriptPath(name) {
 }
 
 const SCRIPTS = {
-  installFlox: scriptPath('install-flox.sh'),
   configureSubstituter: scriptPath('configure-substituter.sh'),
   configureAWS: scriptPath('configure-aws.sh'),
   configureGit: scriptPath('configure-git.sh'),
@@ -79586,55 +79569,6 @@ function exportVariableFromInput(input, defaultValue = '') {
   core.debug(`Exporting variable ${name} to '${value}'`)
   core.exportVariable(name, value)
   return value
-}
-
-async function getDownloadUrl() {
-  const rpm = await which('rpm', { nothrow: true })
-  const dpkg = await which('dpkg', { nothrow: true })
-
-  const BASE_URL = core.getInput('base-url')
-  core.debug(`Base URL is: ${BASE_URL}`)
-
-  let downloadUrl
-
-  if (process.platform === 'darwin' && process.arch === 'x64') {
-    downloadUrl = `${BASE_URL}/osx/flox.x86_64-darwin.pkg`
-  } else if (process.platform === 'darwin' && process.arch === 'arm64') {
-    downloadUrl = `${BASE_URL}/osx/flox.aarch64-darwin.pkg`
-  } else if (
-    dpkg !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'x64'
-  ) {
-    downloadUrl = `${BASE_URL}/deb/flox.x86_64-linux.deb`
-  } else if (
-    dpkg !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'arm64'
-  ) {
-    downloadUrl = `${BASE_URL}/deb/flox.aarch64-linux.deb`
-  } else if (
-    rpm !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'x64'
-  ) {
-    downloadUrl = `${BASE_URL}/rpm/flox.x86_64-linux.rpm`
-  } else if (
-    rpm !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'arm64'
-  ) {
-    downloadUrl = `${BASE_URL}/rpm/flox.aarch64-linux.rpm`
-  } else {
-    core.setFailed(
-      `No platform (${process.platform}) or arch (${process.arch}) or OS matched.`
-    )
-  }
-
-  core.info(`DOWNLOAD_URL resolved to ${downloadUrl}`)
-  core.exportVariable('INPUT_DOWNLOAD_URL', downloadUrl)
-
-  return downloadUrl
 }
 
 

@@ -1,5 +1,5 @@
-name: "Install flox"
-description: "Installs flox on GitHub Actions for the supported platforms: GNU/Linux and macOS."
+name: "Configure Nix"
+description: "Configures Nix on GitHub Actions for the supported platforms: Linux and macOS."
 author: "flox <hello@floxdev.com>"
 
 branding:
@@ -7,10 +7,6 @@ branding:
   icon: "moon"
 
 inputs:
-
-  base-url:
-    description: "Download base URL of flox installer"
-    default: "https://downloads.flox.dev/by-env/stable"
 
   git-user:
     description: "Name of the `author` and `commiter` in git if not set already"

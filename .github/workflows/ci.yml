@@ -29,7 +29,7 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Install Nix"
-        uses: "cachix/install-nix-action@V27"
+        uses: "cachix/install-nix-action@v27"
 
       - name: "Cache Dependencies"
         id: cache
@@ -47,13 +47,13 @@ jobs:
 
       - name: "Install Dependencies"
         if: steps.cache.outputs.cache-hit != 'true'
-        run: nix develop --command npm ci
+        run: nix develop --accept-flake-config --command npm ci
 
       - name: "Check Format"
-        run: nix develop --command npm run format:check
+        run: nix develop --accept-flake-config --command npm run format:check
 
       - name: "Test"
-        run: nix develop --command npm run ci-test
+        run: nix develop --accept-flake-config --command npm run ci-test
 
   test-minimal-action:
     name: "Minimal - Github Action Test"
@@ -64,23 +64,22 @@ jobs:
         os:
           - "ubuntu-latest"
           - "ghcr.io/cirruslabs/macos-sonoma-xcode:latest"
-        # TODO: test with different flox versions
-        #flox-version:
-        #  - stable
-        #  - prerelease
 
     steps:
       - name: "Checkout"
         uses: "actions/checkout@v4"
 
+      - name: "Install Nix"
+        uses: "cachix/install-nix-action@v27"
+
       - name: "Test Local Action"
         uses: "./"
         with:
-          github-access-token: "${{ secrets.MANAGED_GITHUB_ACCESS_TOKEN }}"
+          github-access-token: "${{ secrets.MANAGED_MANAGED_FLOXBOT_GITHUB_ACCESS_TOKEN_REPO_SCOPE }}"
 
-      - name: "Test: flox --version"
+      - name: "Test: nix --version"
         run: |
-          flox --version
+          nix --version
 
   test-all-action:
     name: "All - Github Action Test"
@@ -104,6 +103,9 @@ jobs:
           tags: tag:ci
           authkey: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
 
+      - name: "Install Nix"
+        uses: "cachix/install-nix-action@v27"
+
       - name: "Test Local Action"
         uses: "./"
         with:
@@ -117,22 +119,16 @@ jobs:
 
       - name: "Test Remote Builders"
         if: ${{ runner.os == 'Linux' }} # tailscale Action does not work on MacOS
-        env:
-          # XXX: This is needed until we are in this limbo state and our "new" ui is
-          # not ready yet
-          FLOX_BASH_PASSTHRU: true
         run: |
+          export NIX_PATH="nixpkgs=flake:nixpkgs"
           export NIX_CONFIG="experimental-features = nix-command flakes"
           RAND=$RANDOM
-          nix build -vv -L --impure --expr '(with import <nixpkgs> { system = "x86_64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build -vv -L --impure --expr '(with import <nixpkgs> { system = "aarch64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build -vv -L --impure --expr '(with import <nixpkgs> { system = "x86_64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build -vv -L --impure --expr '(with import <nixpkgs> { system = "aarch64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "x86_64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "aarch64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "x86_64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "aarch64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           cd example
-          nix build --no-write-lock-file
-
-          echo "contents of /tmp/drv-paths:"
-          cat /tmp/drv-paths
+          nix build --accept-flake-config --no-write-lock-file
 
   test-nix-action:
     name: "Nix - test integration with Nix"
@@ -161,6 +157,9 @@ jobs:
           tags: tag:ci
           authkey: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
 
+      - name: "Install Nix"
+        uses: "cachix/install-nix-action@v27"
+
       - name: "Test Local Action"
         uses: "./"
         with:
@@ -174,19 +173,16 @@ jobs:
 
       - name: "Test Remote Builders"
         if: ${{ runner.os == 'Linux' }}
-        env:
-          # XXX: This is needed until we are in this limbo state and our "new" ui is
-          # not ready yet
-          FLOX_BASH_PASSTHRU: true
         run: |
+          export NIX_PATH="nixpkgs=flake:nixpkgs"
           export NIX_CONFIG="experimental-features = nix-command flakes"
           RAND=$RANDOM
-          nix build -L --impure --expr '(with import <nixpkgs> { system = "x86_64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build -L --impure --expr '(with import <nixpkgs> { system = "aarch64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build -L --impure --expr '(with import <nixpkgs> { system = "x86_64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build -L --impure --expr '(with import <nixpkgs> { system = "aarch64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "x86_64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "aarch64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "x86_64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
+          nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "aarch64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           cd example
-          nix build --no-write-lock-file
+          nix build --accept-flake-config --no-write-lock-file
 
   report-failure:
     name: "Report Failure"
@@ -204,7 +200,7 @@ jobs:
       - name: "Slack Notification"
         uses: "rtCamp/action-slack-notify@v2"
         env:
-          SLACK_TITLE:      "Something broke CI for flox/flox on main"
+          SLACK_TITLE:      "Something broke CI for flox/configure-nix-action on main"
           SLACK_FOOTER:     "Thank you for caring"
           SLACK_WEBHOOK:    "${{ secrets.MANAGED_SLACK_WEBHOOK }}"
           SLACK_USERNAME:   "GitHub"

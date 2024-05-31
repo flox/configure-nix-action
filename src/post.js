@@ -5,8 +5,8 @@ const utils = require('./utils')
 
 export async function run() {
   const storePathsFile = process.env['STORE_PATHS_FILE']
-  const floxSubstituter = process.env['FLOX_SUBSTITUTER']
-  if (storePathsFile && floxSubstituter) {
+  const configureNixSubstituter = process.env['CONFIGURE_NIX_SUBSTITUTER']
+  if (storePathsFile && configureNixSubstituter) {
     core.startGroup('Push Nix Store Paths')
     await exec.exec('bash', ['-c', utils.SCRIPTS.pushNewNixStorePaths])
     core.endGroup()

@@ -18,7 +18,7 @@ echo "${INPUT_SUBSTITUTER_KEY}" > /tmp/secret-key
 
 echo "Populating the environment with the substituter's URL and options, and AWS's credentials"
 {
-  echo "FLOX_SUBSTITUTER=${INPUT_SUBSTITUTER}${INPUT_SUBSTITUTER_OPTIONS}"
+  echo "CONFIGURE_NIX_SUBSTITUTER=${INPUT_SUBSTITUTER}${INPUT_SUBSTITUTER_OPTIONS}"
 } >>"${GITHUB_ENV}"
 
 echo "Making the Nix daemon aware of the substituter"

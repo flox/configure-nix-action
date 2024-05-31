@@ -3,9 +3,11 @@
 
   nixConfig.extra-substituters = [
     "https://cache.flox.dev"
+    "s3://flox-cache-private"
   ];
   nixConfig.extra-trusted-public-keys = [
     "flox-cache-public-1:7F4OyH7ZCnFhcze3fJdfyXYLQw/aV7GEed86nQ7IsOs="
+    "flox-cache-private-1:11kWWMbsoFjVfz0lSvRr8PRkFShcmvHDfnSGphvWKnk="
   ];
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -22,7 +24,7 @@
        in
        {
          devShells.default = pkgs.mkShell {
-           name = "install-flox-action";
+           name = "configure-nix-action";
            packages = with pkgs; [
              nodejs_20
            ];

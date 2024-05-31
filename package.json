@@ -1,17 +1,17 @@
 {
-  "name": "install-flox-action",
-  "description": "Installs flox on GitHub Actions for the supported platforms: Linux and macOS. ",
+  "name": "configure-nix-action",
+  "description": "Configures Nix on GitHub Actions for the supported platforms: Linux and macOS.",
   "version": "1.0.0",
   "author": "Flox <hello@floxdev.com>",
   "license": "MIT",
   "private": true,
-  "homepage": "https://github.com/flox/install-flox-action",
+  "homepage": "https://github.com/flox/configure-nix-action",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flox/install-flox-action.git"
+    "url": "git+https://github.com/flox/configure-nix-action.git"
   },
   "bugs": {
-    "url": "https://github.com/flox/install-flox-action/issues"
+    "url": "https://github.com/flox/configure-nix-action/issues"
   },
   "keywords": [
     "github",

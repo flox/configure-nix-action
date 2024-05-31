@@ -5,14 +5,6 @@ const utils = require('./utils')
 const which = require('which')
 
 export async function run() {
-  const nix = await which('nix', { nothrow: true })
-  if (nix === null) {
-    core.startGroup('Download & Install flox')
-    await utils.getDownloadUrl()
-    await exec.exec('bash', ['-c', utils.SCRIPTS.installFlox])
-    core.endGroup()
-  }
-
   core.startGroup('Configure Git')
   utils.exportVariableFromInput('git-user')
   utils.exportVariableFromInput('git-email')
@@ -69,13 +61,6 @@ export async function run() {
   core.startGroup('Restart Nix Daemon')
   await exec.exec('bash', ['-c', utils.SCRIPTS.restartNixDaemon])
   core.endGroup()
-
-  const flox = await which('flox', { nothrow: true })
-  if (flox !== null) {
-    core.startGroup('Checking Flox Version')
-    await exec.exec('flox', ['--version'])
-    core.endGroup()
-  }
 
   core.startGroup('Checking Nix Version')
   await exec.exec('nix', ['--version'])

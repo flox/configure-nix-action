@@ -23,7 +23,6 @@ export function scriptPath(name) {
 }
 
 export const SCRIPTS = {
-  installFlox: scriptPath('install-flox.sh'),
   configureSubstituter: scriptPath('configure-substituter.sh'),
   configureAWS: scriptPath('configure-aws.sh'),
   configureGit: scriptPath('configure-git.sh'),
@@ -42,53 +41,4 @@ export function exportVariableFromInput(input, defaultValue = '') {
   core.debug(`Exporting variable ${name} to '${value}'`)
   core.exportVariable(name, value)
   return value
-}
-
-export async function getDownloadUrl() {
-  const rpm = await which('rpm', { nothrow: true })
-  const dpkg = await which('dpkg', { nothrow: true })
-
-  const BASE_URL = core.getInput('base-url')
-  core.debug(`Base URL is: ${BASE_URL}`)
-
-  let downloadUrl
-
-  if (process.platform === 'darwin' && process.arch === 'x64') {
-    downloadUrl = `${BASE_URL}/osx/flox.x86_64-darwin.pkg`
-  } else if (process.platform === 'darwin' && process.arch === 'arm64') {
-    downloadUrl = `${BASE_URL}/osx/flox.aarch64-darwin.pkg`
-  } else if (
-    dpkg !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'x64'
-  ) {
-    downloadUrl = `${BASE_URL}/deb/flox.x86_64-linux.deb`
-  } else if (
-    dpkg !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'arm64'
-  ) {
-    downloadUrl = `${BASE_URL}/deb/flox.aarch64-linux.deb`
-  } else if (
-    rpm !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'x64'
-  ) {
-    downloadUrl = `${BASE_URL}/rpm/flox.x86_64-linux.rpm`
-  } else if (
-    rpm !== null &&
-    process.platform === 'linux' &&
-    process.arch === 'arm64'
-  ) {
-    downloadUrl = `${BASE_URL}/rpm/flox.aarch64-linux.rpm`
-  } else {
-    core.setFailed(
-      `No platform (${process.platform}) or arch (${process.arch}) or OS matched.`
-    )
-  }
-
-  core.info(`DOWNLOAD_URL resolved to ${downloadUrl}`)
-  core.exportVariable('INPUT_DOWNLOAD_URL', downloadUrl)
-
-  return downloadUrl
 }
