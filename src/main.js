@@ -5,6 +5,13 @@ const utils = require('./utils')
 const which = require('which')
 
 export async function run() {
+  const nix = await which('nix', { nothrow: true })
+  if (nix === null) {
+    core.setFailed(
+      'Nix is not installed. Please install Nix before configuring it.'
+    )
+  }
+
   core.startGroup('Configure Git')
   utils.exportVariableFromInput('git-user')
   utils.exportVariableFromInput('git-email')
