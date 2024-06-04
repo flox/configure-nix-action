@@ -22,7 +22,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
-          - "ghcr.io/cirruslabs/macos-sonoma-xcode:latest"
+          - "macos-latest"
 
     steps:
       - name: "Checkout"
@@ -63,7 +63,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
-          - "ghcr.io/cirruslabs/macos-sonoma-xcode:latest"
+          - "macos-latest"
 
     steps:
       - name: "Checkout"
@@ -89,7 +89,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
-          - "ghcr.io/cirruslabs/macos-sonoma-xcode:latest"
+          - "macos-latest"
 
     steps:
       - name: "Checkout"
@@ -140,7 +140,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
-          - "ghcr.io/cirruslabs/macos-sonoma-xcode:latest"
+          - "macos-latest"
 
     steps:
       - name: "Checkout"
