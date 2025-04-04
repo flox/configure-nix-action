@@ -63,8 +63,12 @@ if [[ "$RUNNER_OS" == "Linux" ]]; then
     sudo tee -a /etc/systemd/system/nix-daemon.service.d/ssh-credentials.conf >/dev/null
 elif [[ "$RUNNER_OS" == "macOS" ]]; then
   sudo plutil \
-    -insert EnvironmentVariables.SSH_AUTH_SOCK \
+    -insert EnvironmentVariables \
+    -dictionary \
+    /Library/LaunchDaemons/org.nixos.nix-daemon.plist \
+    || true # It's okay for this dictionary to already exist
+  sudo plutil \
+    -replace EnvironmentVariables.SSH_AUTH_SOCK \
     -string "$SSH_AUTH_SOCK" \
-      /Library/LaunchDaemons/org.nixos.nix-daemon.plist
+    /Library/LaunchDaemons/org.nixos.nix-daemon.plist
 fi
-
