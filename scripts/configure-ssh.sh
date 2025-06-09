@@ -46,6 +46,7 @@ fi
 
 nohup ssh-agent -D > .ssh-agent-out &
 eval "$( (tail -f .ssh-agent-out &) | sed '/echo Agent pid/ q')"
+rm .ssh-agent-out
 
 # Ensure that the ssh socket has access the the required keys. Notably needed for the nix daemon (see below)
 ssh-add "$HOME/.ssh/id_$INPUT_SSH_KEY_FORMAT"
