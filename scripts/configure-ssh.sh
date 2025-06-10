@@ -74,4 +74,4 @@ elif [[ "$RUNNER_OS" == "macOS" ]]; then
 fi
 
 # cleanup
-rm .ssh-agent-out
+rm -f .ssh-agent-out
