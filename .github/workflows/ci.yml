@@ -96,12 +96,12 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Setup Tailscale"
-        if: ${{ runner.os == 'Linux' }}
         uses: "tailscale/github-action@v3"
         with:
-          args: "--timeout 30s --login-server ${{ vars.MANAGED_TAILSCALE_URL }}"
-          tags: tag:ci
-          authkey: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
+          oauth-secret: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
+          tags: "tag:ci"
+          timeout: "30s"
+          use-cache: true
 
       - name: "Install Nix"
         uses: "cachix/install-nix-action@v31"
@@ -147,12 +147,12 @@ jobs:
         uses: "actions/checkout@v4"
 
       - name: "Setup Tailscale"
-        if: ${{ runner.os == 'Linux' }}
         uses: "tailscale/github-action@v3"
         with:
-          args: "--timeout 30s --login-server ${{ vars.MANAGED_TAILSCALE_URL }}"
-          tags: tag:ci
-          authkey: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
+          oauth-secret: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
+          tags: "tag:ci"
+          timeout: "30s"
+          use-cache: true
 
       - name: "Install Nix"
         uses: "cachix/install-nix-action@v31"
