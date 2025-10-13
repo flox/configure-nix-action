@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: "Install Nix"
         uses: cachix/install-nix-action@v31
@@ -46,7 +46,7 @@ jobs:
         run: git status
 
       - name: "Commit changes"
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           file_pattern: "dist/index.js badges/coverage.svg"
           commit_message: "chore(deps): Update dist/"
