@@ -31,7 +31,13 @@ https://cache.flox.dev}"
   # Convert commas to newlines and remove empty lines
   upstream_caches_list=$(echo "$upstream_caches" | tr ',' '\n' | sed '/^[[:space:]]*$/d' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
-  # Filter out paths that already exist in any upstream cache
+  # Add the target substituter to the list of caches to check (extract base URL without query params)
+  target_substituter_base=$(echo "$CONFIGURE_NIX_SUBSTITUTER" | cut -d'?' -f1)
+  if [ -n "$target_substituter_base" ]; then
+    upstream_caches_list=$(printf "%s\n%s" "$upstream_caches_list" "$target_substituter_base")
+  fi
+
+  # Filter out paths that already exist in any upstream cache (including target)
   > /tmp/paths-to-push  # Create empty file
   while IFS= read -r path; do
     path_exists_in_upstream=false
