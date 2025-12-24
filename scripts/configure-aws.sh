@@ -18,6 +18,9 @@ echo "Populating the environment with AWS's credentials..."
 {
   echo "AWS_ACCESS_KEY_ID=${INPUT_AWS_ACCESS_KEY_ID}"
   echo "AWS_SECRET_ACCESS_KEY=${INPUT_AWS_SECRET_ACCESS_KEY}"
+  # Saving to re-use for nix copies later
+  echo "NIX_AWS_ACCESS_KEY_ID=${INPUT_AWS_ACCESS_KEY_ID}"
+  echo "NIX_AWS_SECRET_ACCESS_KEY=${INPUT_AWS_SECRET_ACCESS_KEY}"
 } >>"${GITHUB_ENV}"
 
 

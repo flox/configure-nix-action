@@ -18,7 +18,14 @@ echo "${INPUT_SUBSTITUTER_KEY}" > /tmp/secret-key
 
 echo "Populating the environment with the substituter's URL and options, and AWS's credentials"
 {
-  echo "CONFIGURE_NIX_SUBSTITUTER=${INPUT_SUBSTITUTER}${INPUT_SUBSTITUTER_OPTIONS}"
+  # Determine the correct separator based on whether query params already exist
+  if [[ "${INPUT_SUBSTITUTER}" == *"?"* ]]; then
+    SEPARATOR="&"
+  else
+    SEPARATOR="?"
+  fi
+
+  echo "CONFIGURE_NIX_SUBSTITUTER=${INPUT_SUBSTITUTER}${SEPARATOR}${INPUT_SUBSTITUTER_OPTIONS}"
 } >>"${GITHUB_ENV}"
 
 echo "Making the Nix daemon aware of the substituter"

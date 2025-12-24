@@ -8,6 +8,12 @@ if [ -z "$CONFIGURE_NIX_SUBSTITUTER" ]; then
   exit 1;
 fi
 
+# Restore Nix substituter credentials if available
+if [ -n "${NIX_AWS_ACCESS_KEY_ID:-}" ]; then
+  export AWS_ACCESS_KEY_ID="${NIX_AWS_ACCESS_KEY_ID}"
+  export AWS_SECRET_ACCESS_KEY="${NIX_AWS_SECRET_ACCESS_KEY}"
+fi
+
 # Allow pushing to fail.
 
 # copy the outputs of drv-paths
