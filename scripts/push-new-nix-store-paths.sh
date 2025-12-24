@@ -38,24 +38,44 @@ https://cache.flox.dev}"
   fi
 
   # Filter out paths that already exist in any upstream cache (including target)
-  > /tmp/paths-to-push  # Create empty file
-  while IFS= read -r path; do
-    path_exists_in_upstream=false
+  # Use batched queries and parallel execution for better performance
 
-    # Check if path exists in any of the upstream caches
-    while IFS= read -r cache; do
-      if [ -n "$cache" ] && nix path-info --store "$cache" "$path" &>/dev/null; then
-        # Path exists in this upstream cache
-        path_exists_in_upstream=true
-        break
-      fi
-    done <<< "$upstream_caches_list"
+  # Read all paths into an array for batch processing
+  mapfile -t all_paths < /tmp/paths-to-check
 
-    # If path doesn't exist in any upstream cache, add to push list
-    if [ "$path_exists_in_upstream" = false ]; then
-      echo "$path" >> /tmp/paths-to-push
+  # Create temp directory for parallel cache check results
+  cache_results_dir=$(mktemp -d)
+
+  # For each cache, check all paths in a single batch query (in parallel)
+  cache_index=0
+  while IFS= read -r cache; do
+    if [ -n "$cache" ]; then
+      (
+        # Query this cache for all paths at once, output existing paths to a file
+        # nix path-info returns only the paths that exist
+        nix path-info --store "$cache" "${all_paths[@]}" 2>/dev/null > "$cache_results_dir/cache-$cache_index.txt" || true
+      ) &
+      cache_index=$((cache_index + 1))
     fi
-  done < /tmp/paths-to-check
+  done <<< "$upstream_caches_list"
+
+  # Wait for all parallel cache checks to complete
+  wait
+
+  # Combine all paths found in any cache into a single file
+  cat "$cache_results_dir"/cache-*.txt 2>/dev/null | sort -u > /tmp/paths-in-caches || true
+
+  # Find paths that are NOT in any cache (paths to push)
+  if [ -s /tmp/paths-in-caches ]; then
+    # Use comm to find paths in paths-to-check but not in paths-in-caches
+    comm -23 <(sort /tmp/paths-to-check) /tmp/paths-in-caches > /tmp/paths-to-push
+  else
+    # No paths found in any cache, push everything
+    cp /tmp/paths-to-check /tmp/paths-to-push
+  fi
+
+  # Clean up temp directory
+  rm -rf "$cache_results_dir"
 
   # Only push paths that don't exist in any upstream cache
   if [ -s /tmp/paths-to-push ]; then
