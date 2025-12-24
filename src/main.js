@@ -39,6 +39,7 @@ export async function run() {
   const substituter = utils.exportVariableFromInput('substituter')
   const substituterKey = utils.exportVariableFromInput('substituter-key')
   utils.exportVariableFromInput('substituter-options')
+  utils.exportVariableFromInput('upstream-caches', 'https://cache.nixos.org\nhttps://cache.flox.dev')
   if (substituter && substituterKey) {
     core.startGroup('Configure Substituter')
     await exec.exec('bash', ['-c', utils.SCRIPTS.configureSubstituter])
