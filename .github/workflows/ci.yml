@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Install Nix"
         uses: "cachix/install-nix-action@v31"
@@ -67,7 +67,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Install Nix"
         uses: "cachix/install-nix-action@v31"
@@ -93,10 +93,10 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Setup Tailscale"
-        uses: "tailscale/github-action@v3"
+        uses: "tailscale/github-action@v4"
         with:
           oauth-secret: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
           tags: "tag:ci"
@@ -144,10 +144,10 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: "actions/checkout@v6"
 
       - name: "Setup Tailscale"
-        uses: "tailscale/github-action@v3"
+        uses: "tailscale/github-action@v4"
         with:
           oauth-secret: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
           tags: "tag:ci"
