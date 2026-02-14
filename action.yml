@@ -34,6 +34,12 @@ inputs:
   substituter-key:
     description: "Substituter key created by `nix key generate-secret`"
 
+  upstream-caches:
+    description: "Comma-separated or newline-separated list of upstream Nix caches to check before pushing paths. Paths already in these caches will be skipped."
+    default: |
+      https://cache.nixos.org
+      https://cache.flox.dev
+
   remote-builders:
     description: "Default remote builders to use for builds"
     default: ""

@@ -28,8 +28,8 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v4"
 
-      - name: "Install Nix"
-        uses: "cachix/install-nix-action@v31"
+      - name: "Install Flox"
+        uses: "flox/activate-flox-action@v1.1.0"
 
       - name: "Cache Dependencies"
         id: cache
@@ -47,13 +47,13 @@ jobs:
 
       - name: "Install Dependencies"
         if: steps.cache.outputs.cache-hit != 'true'
-        run: nix develop --accept-flake-config --command npm ci
+        run: flox activate -- npm ci
 
       - name: "Check Format"
-        run: nix develop --accept-flake-config --command npm run format:check
+        run: flox activate -- npm run format:check
 
       - name: "Test"
-        run: nix develop --accept-flake-config --command npm run ci-test
+        run: flox activate -- npm run ci-test
 
   test-minimal-action:
     name: "Minimal - Github Action Test"
