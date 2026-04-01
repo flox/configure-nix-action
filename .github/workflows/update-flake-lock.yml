@@ -11,12 +11,15 @@ jobs:
     steps:
 
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
         with:
           fetch-depth: 0
 
       - name: "Install Nix"
-        uses: cachix/install-nix-action@v31
+        uses: cachix/install-nix-action@96951a368ba55167b55f1c916f7d416bac6505fe # v31
+
 
       - name: "Update flake.lock"
-        uses: DeterminateSystems/update-flake-lock@v25
+        uses: DeterminateSystems/update-flake-lock@428c2b58a4b7414dabd372acb6a03dba1084d3ab # v25
+
