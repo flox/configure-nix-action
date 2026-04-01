@@ -26,10 +26,12 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
 
       - name: "Install Nix"
-        uses: "cachix/install-nix-action@v31"
+        uses: cachix/install-nix-action@96951a368ba55167b55f1c916f7d416bac6505fe # v31
+
 
       - name: "Cache Dependencies"
         id: cache
@@ -67,10 +69,12 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
 
       - name: "Install Nix"
-        uses: "cachix/install-nix-action@v31"
+        uses: cachix/install-nix-action@96951a368ba55167b55f1c916f7d416bac6505fe # v31
+
 
       - name: "Test Local Action"
         uses: "./"
@@ -93,10 +97,12 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
 
       - name: "Setup Tailscale"
-        uses: "tailscale/github-action@v4"
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4
+
         with:
           oauth-secret: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
           tags: "tag:ci"
@@ -104,7 +110,8 @@ jobs:
           use-cache: true
 
       - name: "Install Nix"
-        uses: "cachix/install-nix-action@v31"
+        uses: cachix/install-nix-action@96951a368ba55167b55f1c916f7d416bac6505fe # v31
+
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
@@ -144,10 +151,12 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
 
       - name: "Setup Tailscale"
-        uses: "tailscale/github-action@v4"
+        uses: tailscale/github-action@306e68a486fd2350f2bfc3b19fcd143891a4a2d8 # v4
+
         with:
           oauth-secret: "${{ secrets.MANAGED_TAILSCALE_AUTH_KEY }}"
           tags: "tag:ci"
@@ -155,7 +164,8 @@ jobs:
           use-cache: true
 
       - name: "Install Nix"
-        uses: "cachix/install-nix-action@v31"
+        uses: cachix/install-nix-action@96951a368ba55167b55f1c916f7d416bac6505fe # v31
+
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
@@ -196,7 +206,8 @@ jobs:
 
     steps:
       - name: "Slack Notification"
-        uses: "rtCamp/action-slack-notify@v2"
+        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2
+
         env:
           SLACK_TITLE:      "Something broke CI for flox/configure-nix-action on main"
           SLACK_FOOTER:     "Thank you for caring"
