@@ -79,7 +79,7 @@ jobs:
       - name: "Test Local Action"
         uses: "./"
         with:
-          github-access-token: "${{ secrets.MANAGED_MANAGED_FLOXBOT_GITHUB_ACCESS_TOKEN_REPO_SCOPE }}"
+          github-access-token: "${{ secrets.MANAGED_FLOXBOT_GITHUB_ACCESS_TOKEN_REPO_SCOPE }}"
 
       - name: "Test: nix --version"
         run: |
