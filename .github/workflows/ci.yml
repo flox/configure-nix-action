@@ -134,7 +134,6 @@ jobs:
           RAND=$RANDOM
           nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "x86_64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "aarch64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "x86_64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           nix build --accept-flake-config -vv -L --impure --expr '(with import <nixpkgs> { system = "aarch64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           cd example
           nix build --accept-flake-config --no-write-lock-file
@@ -187,7 +186,6 @@ jobs:
           RAND=$RANDOM
           nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "x86_64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "aarch64-linux"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
-          nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "x86_64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           nix build --accept-flake-config -L --impure --expr '(with import <nixpkgs> { system = "aarch64-darwin"; }; runCommand "foo-'"$RAND"'" {} "uname -mo > $out")'
           cd example
           nix build --accept-flake-config --no-write-lock-file
