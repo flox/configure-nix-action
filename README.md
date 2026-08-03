@@ -19,13 +19,13 @@ jobs:
     steps:
 
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
 
     - name: Install Nix
-      uses: cachix/install-nix-action
+      uses: cachix/install-nix-action@v31
 
     - name: Configure Nix
-      uses: flox/configure-nix-action
+      uses: flox/configure-nix-action@main
       with: ...options...
 
     - name: Build

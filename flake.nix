@@ -26,7 +26,7 @@
          devShells.default = pkgs.mkShell {
            name = "configure-nix-action";
            packages = with pkgs; [
-             nodejs_20
+             nodejs_24
            ];
          };
        }
