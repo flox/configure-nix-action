@@ -26,6 +26,18 @@ fi
 
 echo "Configure ssh to allow builtins.fetchGit and related to work"
 
+# Detect and drop stalled SSH connections to remote builders instead of
+# hanging until the job timeout. Builder connections are opened by the
+# nix daemon (root), so this must be system-wide client config, not
+# $HOME/.ssh/config. Both Linux and macOS ship an
+# "Include /etc/ssh/ssh_config.d/*" in /etc/ssh/ssh_config.
+sudo mkdir -p /etc/ssh/ssh_config.d
+printf "%s\n" \
+  'Host *' \
+  '  ServerAliveInterval 15' \
+  '  ServerAliveCountMax 4' |
+  sudo tee /etc/ssh/ssh_config.d/10-keepalive.conf >/dev/null
+
 
 mkdir -p "$HOME/.ssh"
 ssh-keyscan github.com >> "$HOME/.ssh/known_hosts"
