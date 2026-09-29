@@ -2,6 +2,7 @@ const cache = require('@actions/cache')
 const core = require('@actions/core')
 const exec = require('@actions/exec')
 const utils = require('./utils')
+const waitForNixStore = require('./wait-for-nix-store')
 const which = require('which')
 
 export async function run() {
@@ -71,12 +72,7 @@ export async function run() {
 
   core.startGroup('Checking Nix Version')
   await exec.exec('nix', ['--version'])
-  await exec.exec('nix', [
-    'store',
-    'ping',
-    '--extra-experimental-features',
-    'nix-command'
-  ])
+  await waitForNixStore()
   core.endGroup()
 
   core.startGroup('Record Nix Store Paths')

@@ -71794,6 +71794,7 @@ const cache = __nccwpck_require__(5116)
 const core = __nccwpck_require__(7484)
 const exec = __nccwpck_require__(5236)
 const utils = __nccwpck_require__(5804)
+const waitForNixStore = __nccwpck_require__(848)
 const which = __nccwpck_require__(1189)
 
 async function run() {
@@ -71863,12 +71864,7 @@ async function run() {
 
   core.startGroup('Checking Nix Version')
   await exec.exec('nix', ['--version'])
-  await exec.exec('nix', [
-    'store',
-    'ping',
-    '--extra-experimental-features',
-    'nix-command'
-  ])
+  await waitForNixStore()
   core.endGroup()
 
   core.startGroup('Record Nix Store Paths')
@@ -71979,6 +71975,34 @@ function exportVariableFromInput(input, defaultValue = '') {
   core.exportVariable(name, value)
   return value
 }
+
+
+/***/ }),
+
+/***/ 848:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const exec = __nccwpck_require__(5236)
+
+async function waitForNixStore() {
+  let exitCode
+  for (let attempt = 1; attempt <= 10; attempt++) {
+    exitCode = await exec.exec(
+      'nix',
+      ['store', 'ping', '--extra-experimental-features', 'nix-command'],
+      { ignoreReturnCode: true }
+    )
+    if (exitCode === 0) return
+    if (attempt < 10) {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+    }
+  }
+  throw new Error(
+    `Nix store did not become ready after 10 attempts (last exit code: ${exitCode})`
+  )
+}
+
+module.exports = waitForNixStore
 
 
 /***/ }),
