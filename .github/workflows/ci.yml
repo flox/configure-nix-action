@@ -205,7 +205,10 @@ jobs:
         uses: rtCamp/action-slack-notify@33ca3be66c6f378fe1610fd1d5258632dbed5e58 # v2
 
         env:
+          SLACK_CHANNEL:    "#committee-ops"
           SLACK_TITLE:      "Something broke CI for flox/configure-nix-action on main"
+          # <@U095MHSG5GS> is Morgan Helton.
+          SLACK_MESSAGE:    "<@U095MHSG5GS>"
           SLACK_FOOTER:     "Thank you for caring"
           SLACK_WEBHOOK:    "${{ secrets.MANAGED_SLACK_WEBHOOK }}"
           SLACK_USERNAME:   "GitHub"
